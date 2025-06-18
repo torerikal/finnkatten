@@ -1,20 +1,19 @@
 import { useState, useRef, createRef, useEffect } from 'react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import im1 from './assets/nocats/1.jpeg';
+import im2 from './assets/nocats/2.jpeg';
+import im3 from './assets/nocats/3.jpeg';
+import im4 from './assets/nocats/4.jpeg';
+import im5 from './assets/nocats/5.jpeg';
+import im6 from './assets/nocats/6.jpeg';
+import im7 from './assets/nocats/7.jpeg';
+import im8 from './assets/nocats/8.jpeg';
+import im9 from './assets/nocats/9.jpeg';
+import im10 from './assets/nocats/10.jpeg';
+import im11 from './assets/nocats/11.jpeg';
+import im12 from './assets/nocats/12.jpeg';
 
-const images = [
-  '/src/assets/nocats/1.jpeg',
-  '/src/assets/nocats/2.jpeg',
-  '/src/assets/nocats/3.jpeg',
-  '/src/assets/nocats/4.jpeg',
-  '/src/assets/nocats/5.jpeg',
-  '/src/assets/nocats/6.jpeg',
-  '/src/assets/nocats/7.jpeg',
-  '/src/assets/nocats/8.jpeg',
-  '/src/assets/nocats/9.jpeg',
-  '/src/assets/nocats/10.jpeg',
-  '/src/assets/nocats/11.jpeg',
-  '/src/assets/nocats/12.jpeg',
-]
+const images = [im1, im2, im3, im4, im5, im6, im7, im8, im9, im10, im11, im12];
 
 const CIRCLE_SIZE = 50
 
