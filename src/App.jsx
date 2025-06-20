@@ -16,6 +16,7 @@ import im12 from './assets/nocats/12.jpeg';
 const images = [im1, im2, im3, im4, im5, im6, im7, im8, im9, im10, im11, im12];
 
 const CIRCLE_SIZE = 50
+const CIRCLE_TOP_OFFSET = 56
 
 function App() {
   const [openIdx, setOpenIdx] = useState(null)
@@ -139,6 +140,25 @@ function App() {
     )
   }
 
+  const handleImageMouseUp = (e, idx) => {
+    const img = imgRefs.current[idx]?.current;
+    if (!img) return;
+    const rect = img.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const x = clientX - rect.left - CIRCLE_SIZE / 2;
+    const y = CIRCLE_TOP_OFFSET + clientY - rect.top - CIRCLE_SIZE / 2;
+    setCirclePos((prev) =>
+      prev.map((pos, i) =>
+        i === idx ? { x, y } : pos
+      )
+    );
+    // Save relative position
+    const relX = x / rect.width;
+    const relY = y / rect.height;
+    localStorage.setItem(`cat-pos-${idx}`, JSON.stringify({ x: relX, y: relY }));
+  }
+
   // Handle drag end
   const handleMouseUp = () => {
     const { idx } = dragState.current;
@@ -168,9 +188,10 @@ function App() {
       {circleEditIdx == null && <>
         <h1 style={{ textAlign: 'center' }}>😺 Finn katten 🙀</h1>
         {foundCount > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
             <p style={{ textAlign: 'center', margin: 0 }}>
-              {foundCount} av {images.length} kattar er lokalisert {allFound ? '✅' : '🕵️️'}
+              {allFound ? '✅' : '🕵️️'} {foundCount} av {images.length} kattar er lokalisert{allFound ? '... Men er dei korrekt markert?' : ''}
+              <a style={{ cursor: 'pointer', lineHeight: '1.0', transform: 'translateY(1px)', display: 'inline-block', marginLeft: '1em' }} onClick={handleResetAllPositions}>⏻ Nullstill</a>
             </p>
           </div>
         )}
@@ -298,13 +319,15 @@ function App() {
             ref={imgRefs.current[circleEditIdx]}
             src={images[circleEditIdx]}
             alt={`img-${circleEditIdx + 1}`}
+            onMouseUp={e => handleImageMouseUp(e, circleEditIdx)}
+            onTouchEnd={e => handleImageMouseUp(e, circleEditIdx)}
             style={{ width: '100%', display: 'block', cursor: 'pointer' }}
           />
           <div
             style={{
               position: 'absolute',
               left: circlePos[circleEditIdx]?.x ?? 0,
-              top: circlePos[circleEditIdx]?.y ?? 56,
+              top: circlePos[circleEditIdx]?.y ?? CIRCLE_TOP_OFFSET,
               width: CIRCLE_SIZE,
               height: CIRCLE_SIZE,
               borderRadius: '50%',
